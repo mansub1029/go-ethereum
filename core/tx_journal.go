@@ -18,6 +18,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 
@@ -49,6 +50,7 @@ type txJournal struct {
 
 // newTxJournal creates a new transaction journal to
 func newTxJournal(path string) *txJournal {
+	fmt.Println("@@@newTxJournal")
 	return &txJournal{
 		path: path,
 	}
@@ -57,6 +59,7 @@ func newTxJournal(path string) *txJournal {
 // load parses a transaction journal dump from disk, loading its contents into
 // the specified pool.
 func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
+	fmt.Println("@@@load_txJournaling")
 	// Skip the parsing if the journal file doesn't exist at all
 	if _, err := os.Stat(journal.path); os.IsNotExist(err) {
 		return nil
@@ -118,6 +121,7 @@ func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
 
 // insert adds the specified transaction to the local disk journal.
 func (journal *txJournal) insert(tx *types.Transaction) error {
+	fmt.Println("@@@insert_txJournaling")
 	if journal.writer == nil {
 		return errNoActiveJournal
 	}
@@ -130,6 +134,7 @@ func (journal *txJournal) insert(tx *types.Transaction) error {
 // rotate regenerates the transaction journal based on the current contents of
 // the transaction pool.
 func (journal *txJournal) rotate(all map[common.Address]types.Transactions) error {
+	fmt.Println("@@@rotate_txJournaling")
 	// Close the current journal (if any is open)
 	if journal.writer != nil {
 		if err := journal.writer.Close(); err != nil {
