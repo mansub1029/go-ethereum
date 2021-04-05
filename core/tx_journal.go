@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -125,6 +126,7 @@ func (journal *txJournal) insert(tx *types.Transaction) error {
 	if journal.writer == nil {
 		return errNoActiveJournal
 	}
+	time.Sleep(time.Second * 10)
 	if err := rlp.Encode(journal.writer, tx); err != nil {
 		return err
 	}
@@ -175,6 +177,7 @@ func (journal *txJournal) rotate(all map[common.Address]types.Transactions) erro
 
 // close flushes the transaction journal contents to disk and closes the file.
 func (journal *txJournal) close() error {
+	fmt.Println("@@@txJournal_close")
 	var err error
 
 	if journal.writer != nil {
