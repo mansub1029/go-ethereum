@@ -218,7 +218,7 @@ type BlockChain struct {
 // Processor.
 func NewBlockChain(db ethdb.Database, cacheConfig *CacheConfig, chainConfig *params.ChainConfig,
 	engine consensus.Engine, vmConfig vm.Config, shouldPreserve func(block *types.Block) bool, txLookupLimit *uint64) (*BlockChain, error) {
-	fmt.Println("@@@NewBlockChain")
+	//fmt.Println("@@@NewBlockChain")
 	if cacheConfig == nil {
 		cacheConfig = defaultCacheConfig
 	}
@@ -423,7 +423,7 @@ func (bc *BlockChain) empty() bool {
 // loadLastState loads the last known chain state from the database. This method
 // assumes that the chain manager mutex is held.
 func (bc *BlockChain) loadLastState() error {
-	fmt.Println("@@@loadLastState")
+	//fmt.Println("@@@loadLastState")
 	fmt.Println(unsafe.Sizeof(bc.db))
 
 	// Restore the last known head block
@@ -435,7 +435,7 @@ func (bc *BlockChain) loadLastState() error {
 	}
 	// Make sure the entire head block is available
 	currentBlock := bc.GetBlockByHash(head)
-	fmt.Println("@@@@@@currentBlock")
+	//fmt.Println("@@@@@@currentBlock")
 	fmt.Println(unsafe.Sizeof(currentBlock))
 	if currentBlock == nil {
 		// Corrupt or empty database, init from scratch
@@ -448,7 +448,7 @@ func (bc *BlockChain) loadLastState() error {
 
 	// Restore the last known head header
 	currentHeader := currentBlock.Header()
-	fmt.Println("@@@@@@currentHeader")
+	//fmt.Println("@@@@@@currentHeader")
 	fmt.Println(unsafe.Sizeof(currentHeader))
 	if head := rawdb.ReadHeadHeaderHash(bc.db); head != (common.Hash{}) {
 		if header := bc.GetHeaderByHash(head); header != nil {
@@ -1670,7 +1670,7 @@ func (bc *BlockChain) addFutureBlock(block *types.Block) error {
 // After insertion is done, all accumulated events will be fired.
 func (bc *BlockChain) InsertChain(chain types.Blocks) (int, error) {
 	//chain = blockchain에 연결될 block의 갯수
-	fmt.Println("@@@InsertChain")
+	//fmt.Println("@@@InsertChain")
 	fmt.Println(len(chain))
 
 	// Sanity check that we have something meaningful to import

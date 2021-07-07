@@ -19,14 +19,14 @@ package core
 import (
 	"errors"
 	"fmt"
-	"io"
-	"os"
-	"time"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"io"
+	"os"
+	"runtime/debug"
+	"time"
 )
 
 // errNoActiveJournal is returned if a transaction is attempted to be inserted
@@ -51,7 +51,7 @@ type txJournal struct {
 
 // newTxJournal creates a new transaction journal to
 func newTxJournal(path string) *txJournal {
-	fmt.Println("@@@newTxJournal")
+	//fmt.Println("@@@newTxJournal")
 	return &txJournal{
 		path: path,
 	}
@@ -60,7 +60,7 @@ func newTxJournal(path string) *txJournal {
 // load parses a transaction journal dump from disk, loading its contents into
 // the specified pool.
 func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
-	fmt.Println("@@@load_txJournaling")
+	//fmt.Println("@@@load_txJournaling")
 	// Skip the parsing if the journal file doesn't exist at all
 	if _, err := os.Stat(journal.path); os.IsNotExist(err) {
 		return nil
@@ -122,7 +122,10 @@ func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
 
 // insert adds the specified transaction to the local disk journal.
 func (journal *txJournal) insert(tx *types.Transaction) error {
+
 	fmt.Println("@@@insert_txJournaling")
+	debug.PrintStack()
+	debug.PrintStack()
 	if journal.writer == nil {
 		return errNoActiveJournal
 	}
@@ -136,7 +139,7 @@ func (journal *txJournal) insert(tx *types.Transaction) error {
 // rotate regenerates the transaction journal based on the current contents of
 // the transaction pool.
 func (journal *txJournal) rotate(all map[common.Address]types.Transactions) error {
-	fmt.Println("@@@rotate_txJournaling")
+	//fmt.Println("@@@rotate_txJournaling")
 	// Close the current journal (if any is open)
 	if journal.writer != nil {
 		if err := journal.writer.Close(); err != nil {
@@ -177,7 +180,7 @@ func (journal *txJournal) rotate(all map[common.Address]types.Transactions) erro
 
 // close flushes the transaction journal contents to disk and closes the file.
 func (journal *txJournal) close() error {
-	fmt.Println("@@@txJournal_close")
+	//fmt.Println("@@@txJournal_close")
 	var err error
 
 	if journal.writer != nil {
