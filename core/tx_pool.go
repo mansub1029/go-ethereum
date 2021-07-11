@@ -18,8 +18,10 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"math"
 	"math/big"
+	"runtime/debug"
 	"sort"
 	"sync"
 	"time"
@@ -579,7 +581,6 @@ func (pool *TxPool) validateTx(tx *types.Transaction, local bool) error {
 // whitelisted, preventing any associated transaction from being dropped out of the pool
 // due to pricing constraints.
 func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err error) {
-	//fmt.Println("@@@add")
 	// If the transaction is already known, discard it
 	hash := tx.Hash()
 	if pool.all.Get(hash) != nil {
@@ -638,7 +639,7 @@ func (pool *TxPool) add(tx *types.Transaction, local bool) (replaced bool, err e
 			pool.priced.Removed(1)
 			pendingReplaceMeter.Mark(1)
 		}
-		//fmt.Println("@@@add_if here??")
+		fmt.Println("@@@add_if here??")
 		pool.all.Add(tx, isLocal)
 		pool.priced.Put(tx, isLocal)
 		pool.journalTx(from, tx)
@@ -819,12 +820,14 @@ func (pool *TxPool) AddRemote(tx *types.Transaction) error {
 
 // addTxs attempts to queue a batch of transactions if they are valid.
 func (pool *TxPool) addTxs(txs []*types.Transaction, local, sync bool) []error {
-	//fmt.Println("@@@addTxs")
+	fmt.Println("@@@addTxs")
+	debug.PrintStack()
 	// Filter out known ones without obtaining the pool lock or recovering signatures
 	var (
 		errs = make([]error, len(txs))
 		news = make([]*types.Transaction, 0, len(txs))
 	)
+	//fmt.Println("@@@addTxs:", len(txs)) : always len(txs) = 1
 	for i, tx := range txs {
 		// If the transaction is known, pre-set the error slot
 		if pool.all.Get(tx.Hash()) != nil {

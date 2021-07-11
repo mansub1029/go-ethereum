@@ -18,15 +18,13 @@ package core
 
 import (
 	"errors"
-	"fmt"
+	"io"
+	"os"
+
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
-	"io"
-	"os"
-	"runtime/debug"
-	"time"
 )
 
 // errNoActiveJournal is returned if a transaction is attempted to be inserted
@@ -123,13 +121,12 @@ func (journal *txJournal) load(add func([]*types.Transaction) []error) error {
 // insert adds the specified transaction to the local disk journal.
 func (journal *txJournal) insert(tx *types.Transaction) error {
 
-	fmt.Println("@@@insert_txJournaling")
-	debug.PrintStack()
-	debug.PrintStack()
+	//fmt.Println("@@@insert_txJournaling")
+	//debug.PrintStack()
 	if journal.writer == nil {
 		return errNoActiveJournal
 	}
-	time.Sleep(time.Second * 10)
+	//time.Sleep(time.Second * 10)
 	if err := rlp.Encode(journal.writer, tx); err != nil {
 		return err
 	}

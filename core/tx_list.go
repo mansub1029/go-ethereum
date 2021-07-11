@@ -18,6 +18,7 @@ package core
 
 import (
 	"container/heap"
+	"fmt"
 	"math"
 	"math/big"
 	"sort"
@@ -267,6 +268,7 @@ func newTxList(strict bool) *txList {
 // Overlaps returns whether the transaction specified has the same nonce as one
 // already contained within the list.
 func (l *txList) Overlaps(tx *types.Transaction) bool {
+	fmt.Println("@@@OVerlaps: ", l.txs.Get(tx.Nonce()))
 	return l.txs.Get(tx.Nonce()) != nil
 }
 
