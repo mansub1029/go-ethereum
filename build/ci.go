@@ -265,6 +265,8 @@ func doInstall(cmdline []string) {
 
 	// Show packages during build.
 	gobuild.Args = append(gobuild.Args, "-v")
+	// mansub - add to args for pmem -txn
+	gobuild.Args = append(gobuild.Args, "-txn")
 
 	// Now we choose what we're even building.
 	// Default: collect all 'main' packages in cmd/ and build those.
